@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'wistia_player_flags.dart';
-import 'wistia_player_options.dart';
+import 'wistia_player_value.dart';
 
-class WistiaPlayerController extends ValueNotifier<WistiaPlayerOptions> {
+class WistiaPlayerController extends ValueNotifier<WistiaPlayerValue> {
   /// The video id of the Wistia video to play
   final String videoId;
 
@@ -13,7 +13,7 @@ class WistiaPlayerController extends ValueNotifier<WistiaPlayerOptions> {
   WistiaPlayerController({
     required this.videoId,
     this.flags = const WistiaPlayerFlags(),
-  }) : super(WistiaPlayerOptions());
+  }) : super(WistiaPlayerValue());
 
   @override
   void dispose() {
@@ -39,4 +39,13 @@ class WistiaPlayerController extends ValueNotifier<WistiaPlayerOptions> {
 
   /// Pauses the video.
   void pause() => _callMethod('pause()');
+
+  /// Disables audio on the video
+  void mute() => _callMethod('mute()');
+
+  /// Enables audio on the video if it had been disabled via mute(). The video’s volume before it was muted will be restored.
+  void unmute() => _callMethod('unmute()');
+
+  /// Updates the old [WistiaPlayerOptions] with new one provided.
+  void updateValue(WistiaPlayerValue newValue) => value = newValue;
 }
