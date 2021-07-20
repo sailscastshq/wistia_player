@@ -1,10 +1,11 @@
 name: wistia_player
-version: 0.0.1
+version: 0.0.2
 description: Flutter package for playing or streaming inline Wistia videos using the official iFrame player API. This plugin supports both Android and iOS.
 repository: https://github.com/sailscastshq/wistia_player
 homepage: https://github.com/sailscastshq/wistia_player
 environment:
   sdk: ">=2.13.0 <3.0.0"
+  flutter: ">=1.17.0"
 
 dependencies:
   webview_flutter: ^2.0.10
