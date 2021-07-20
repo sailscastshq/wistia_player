@@ -5,7 +5,7 @@ import 'package:wistia_player/src/wistia_meta_data.dart';
 import 'package:wistia_player/src/enums/end_video_behavior.dart';
 import 'package:wistia_player/src/enums/fit_strategy.dart';
 
-class WistiaPlayerOptions {
+class WistiaPlayerValue {
   /// Returns true when the player is ready to play videos.
   final bool isReady;
 
@@ -129,7 +129,15 @@ class WistiaPlayerOptions {
   /// allowing the page color to show through - instead of black.
   /// This applies e.g. if there’s an aspect ratio discrepancy between the dimensions of the video and its container; this option is not connected to Alpha Transparency.
   final String wmode;
-  WistiaPlayerOptions(
+
+  /// Returns true is player has errors.
+  bool get hasError => errorCode != 0;
+
+  final int? errorCode;
+
+  final String? errorMessage;
+
+  WistiaPlayerValue(
       {this.playerState,
       this.webViewController,
       this.metaData,
@@ -169,5 +177,19 @@ class WistiaPlayerOptions {
       this.videoFoam,
       this.volume = 1,
       this.volumeControl = true,
-      this.wmode = 'transparent'});
+      this.wmode = 'transparent',
+      this.errorCode,
+      this.errorMessage});
+
+  WistiaPlayerValue copyWith(
+      {bool? isReady,
+      WebViewController? webViewController,
+      int? errorCode,
+      String? errorMessage}) {
+    return WistiaPlayerValue(
+        isReady: isReady ?? this.isReady,
+        webViewController: webViewController ?? this.webViewController,
+        errorCode: errorCode ?? this.errorCode,
+        errorMessage: errorMessage ?? this.errorMessage);
+  }
 }
