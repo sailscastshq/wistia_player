@@ -1,5 +1,3 @@
-import 'type_defs.dart';
-
 class WistiaMetaData {
   /// Wistia video ID of the currently loaded video.
   final String videoId;
@@ -15,7 +13,7 @@ class WistiaMetaData {
       {this.videoId = '', this.title = '', this.duration = const Duration()});
 
   /// Create [WistiaMetaData] from raw json
-  factory WistiaMetaData.fromJson(Json data) {
+  factory WistiaMetaData.fromJson(Map<String, dynamic> data) {
     final durationInMs = (((data['duration'] ?? 0) as double) * 1000).floor();
 
     return WistiaMetaData(

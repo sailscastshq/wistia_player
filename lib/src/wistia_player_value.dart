@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:wistia_player/src/enums/preload.dart';
 import 'package:wistia_player/src/enums/wistia_player_state.dart';
@@ -8,6 +9,8 @@ import 'package:wistia_player/src/enums/fit_strategy.dart';
 class WistiaPlayerValue {
   /// Returns true when the player is ready to play videos.
   final bool isReady;
+
+  final bool autoPlay;
 
   /// Returns true if video is playing.
   final bool isPlaying;
@@ -29,8 +32,8 @@ class WistiaPlayerValue {
   final String? email;
   final EndVideoBehavior endVideoBehavior;
   final bool fakeFullScreen;
-  final FitStrategy? fitStrategy;
-  final bool fullScreenButton;
+  final FitStrategy fitStrategy;
+  final bool fullscreenButton;
   final bool fullscreenOnRotateToLandscape;
   final bool googleAnalytics;
   final bool muted;
@@ -137,26 +140,37 @@ class WistiaPlayerValue {
 
   final String? errorMessage;
 
+  get getEndVideoBehavior {
+    String behavior = describeEnum(this.endVideoBehavior);
+    if (behavior == 'wsDefault') {
+      return 'default';
+    }
+    return behavior;
+  }
+
+  get getFitStrategy => describeEnum(this.fitStrategy);
+
   WistiaPlayerValue(
-      {this.playerState,
+      {this.autoPlay = true,
+      this.playerState,
       this.webViewController,
       this.metaData,
       this.isReady = false,
       this.isPlaying = false,
-      this.controlsVisibleOnLoad = false,
+      this.controlsVisibleOnLoad = true,
       this.copyLinkAndThumbnailEnabled = false,
       this.doNotTrack = false,
       this.email,
       this.endVideoBehavior = EndVideoBehavior.wsDefault,
       this.fakeFullScreen = false,
-      this.fitStrategy,
-      this.fullScreenButton = true,
+      this.fitStrategy = FitStrategy.contain,
+      this.fullscreenButton = true,
       this.fullscreenOnRotateToLandscape = true,
       this.googleAnalytics = false,
       this.muted = false,
       this.playbackRateControl = true,
       this.playbar = true,
-      this.playButton = true,
+      this.playButton = false,
       this.playerColor,
       this.playlistLinks,
       this.playlistLoop = false,
@@ -181,15 +195,98 @@ class WistiaPlayerValue {
       this.errorCode,
       this.errorMessage});
 
-  WistiaPlayerValue copyWith(
-      {bool? isReady,
-      WebViewController? webViewController,
-      int? errorCode,
-      String? errorMessage}) {
+  WistiaPlayerValue copyWith({
+    bool? isReady,
+    WebViewController? webViewController,
+    int? errorCode,
+    String? errorMessage,
+    bool? autoPlay,
+    bool? isPlaying,
+    WistiaPlayerState? playerState,
+    WistiaMetaData? metaData,
+    bool? controlsVisibleOnLoad,
+    bool? copyLinkAndThumbnailEnabled,
+    bool? doNotTrack,
+    String? email,
+    EndVideoBehavior? endVideoBehavior,
+    bool? fakeFullScreen,
+    FitStrategy? fitStrategy,
+    bool? fullscreenButton,
+    bool? fullscreenOnRotateToLandscape,
+    bool? googleAnalytics,
+    bool? muted,
+    bool? playbackRateControl,
+    bool? playbar,
+    bool? playButton,
+    String? playerColor,
+    String? playlistLinks,
+    bool? playlistLoop,
+    bool? playsinline,
+    bool? playSuspendedOffScreen,
+    Preload? preload,
+    bool? qualityControl,
+    int? qualityMax,
+    int? qualityMin,
+    dynamic resumable,
+    bool? seo,
+    bool? settingsControl,
+    dynamic silentAutoPlay,
+    bool? smallPlayButton,
+    String? stillUrl,
+    dynamic time,
+    String? thumbnailAltText,
+    dynamic videoFoam,
+    int? volume,
+    bool? volumeControl,
+    String? wmode,
+  }) {
     return WistiaPlayerValue(
         isReady: isReady ?? this.isReady,
         webViewController: webViewController ?? this.webViewController,
         errorCode: errorCode ?? this.errorCode,
-        errorMessage: errorMessage ?? this.errorMessage);
+        errorMessage: errorMessage ?? this.errorMessage,
+        autoPlay: autoPlay ?? this.autoPlay,
+        isPlaying: isPlaying ?? this.isPlaying,
+        playerState: playerState ?? this.playerState,
+        metaData: metaData ?? this.metaData,
+        controlsVisibleOnLoad:
+            controlsVisibleOnLoad ?? this.controlsVisibleOnLoad,
+        copyLinkAndThumbnailEnabled:
+            copyLinkAndThumbnailEnabled ?? this.copyLinkAndThumbnailEnabled,
+        doNotTrack: doNotTrack ?? this.doNotTrack,
+        email: email ?? this.email,
+        endVideoBehavior: endVideoBehavior ?? this.endVideoBehavior,
+        fakeFullScreen: fakeFullScreen ?? this.fakeFullScreen,
+        fitStrategy: fitStrategy ?? this.fitStrategy,
+        fullscreenButton: fullscreenButton ?? this.fullscreenButton,
+        fullscreenOnRotateToLandscape:
+            fullscreenOnRotateToLandscape ?? this.fullscreenOnRotateToLandscape,
+        googleAnalytics: googleAnalytics ?? this.googleAnalytics,
+        muted: muted ?? this.muted,
+        playbackRateControl: playbackRateControl ?? this.playbackRateControl,
+        playbar: playbar ?? this.playbar,
+        playButton: playButton ?? this.playButton,
+        playerColor: playerColor ?? this.playerColor,
+        playlistLinks: playlistLinks ?? this.playlistLinks,
+        playlistLoop: playlistLoop ?? this.playlistLoop,
+        playsinline: playsinline ?? this.playsinline,
+        playSuspendedOffScreen:
+            playSuspendedOffScreen ?? this.playSuspendedOffScreen,
+        preload: preload ?? this.preload,
+        qualityControl: qualityControl ?? this.qualityControl,
+        qualityMax: qualityMax ?? this.qualityMax,
+        qualityMin: qualityMin ?? this.qualityMin,
+        resumable: resumable ?? this.resumable,
+        seo: seo ?? this.seo,
+        settingsControl: settingsControl ?? this.settingsControl,
+        silentAutoPlay: silentAutoPlay ?? this.silentAutoPlay,
+        smallPlayButton: smallPlayButton ?? this.smallPlayButton,
+        stillUrl: stillUrl ?? this.stillUrl,
+        time: time ?? this.time,
+        thumbnailAltText: thumbnailAltText ?? this.thumbnailAltText,
+        videoFoam: videoFoam ?? this.videoFoam,
+        volume: volume ?? this.volume,
+        volumeControl: volumeControl ?? this.volumeControl,
+        wmode: wmode ?? this.wmode);
   }
 }
