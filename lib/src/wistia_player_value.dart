@@ -25,7 +25,6 @@ class WistiaPlayerValue {
   final WistiaMetaData? metaData;
 
   /// Creates new [WistiaPlayerValue] with assigned parameters.
-  ///
   final bool controlsVisibleOnLoad;
   final bool copyLinkAndThumbnailEnabled;
   final bool doNotTrack;
@@ -288,5 +287,47 @@ class WistiaPlayerValue {
         volume: volume ?? this.volume,
         volumeControl: volumeControl ?? this.volumeControl,
         wmode: wmode ?? this.wmode);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+
+    data['autoPlay'] = autoPlay;
+    data['controlsVisibleOnLoad'] = controlsVisibleOnLoad;
+    data['copyLinkAndThumbnailEnabled'] = copyLinkAndThumbnailEnabled;
+    data['doNotTrack'] = doNotTrack;
+    data['email'] = email;
+    data['endVideoBehavior'] = this.getEndVideoBehavior;
+    data['fakeFullScreen'] = fakeFullScreen;
+    data['fitStrategy'] = describeEnum(fitStrategy);
+    data['fullscreenButton'] = fullscreenButton;
+    data['fullscreenOnRotateToLandscape'] = fullscreenOnRotateToLandscape;
+    data['googleAnalytics'] = googleAnalytics;
+    data['muted'] = muted;
+    data['playbackRateControl'] = playbackRateControl;
+    data['playbar'] = playbar;
+    data['playButton'] = playButton;
+    data['playerColor'] = playerColor;
+    data['playlistLinks'] = playlistLinks;
+    data['playlistLoop'] = playlistLoop;
+    data['playsinline'] = playsinline;
+    data['playSuspendedOffScreen'] = playSuspendedOffScreen;
+    data['preload'] = describeEnum(preload);
+    data['qualityControl'] = qualityControl;
+    data['qualityMax'] = qualityMax;
+    data['qualityMin'] = qualityMin;
+    data['resumable'] = resumable;
+    data['seo'] = seo;
+    data['settingsControl'] = settingsControl;
+    data['silentAutoPlay'] = silentAutoPlay;
+    data['smallPlayButton'] = smallPlayButton;
+    data['stillUrl'] = stillUrl;
+    data['time'] = time;
+    data['thumbnailAltText'] = thumbnailAltText;
+    data['videoFoam'] = videoFoam;
+    data['volume'] = volume;
+    data['volumeControl'] = volumeControl;
+    data['wmode'] = wmode;
+    return data;
   }
 }

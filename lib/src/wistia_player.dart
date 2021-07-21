@@ -29,17 +29,19 @@ class _WistiaPlayerState extends State<WistiaPlayer>
   @override
   void initState() {
     WidgetsBinding.instance?.addObserver(this);
-
     if (!widget.controller.hasDisposed) {
-      this.controller = widget.controller;
+      this.controller = widget.controller..addListener(listener);
     }
     super.initState();
   }
+
+  void listener() async {}
 
   @override
   void dispose() {
     super.dispose();
     WidgetsBinding.instance?.removeObserver(this);
+    controller?.removeListener(listener);
   }
 
   @override
@@ -64,6 +66,8 @@ class _WistiaPlayerState extends State<WistiaPlayer>
   @override
   Widget build(BuildContext context) {
     return WebView(
+      key: widget.key,
+      initialUrl: 'about:blank',
       allowsInlineMediaPlayback: true,
       javascriptMode: JavascriptMode.unrestricted,
       onWebViewCreated: _onWebViewCreated,
@@ -106,9 +110,13 @@ class _WistiaPlayerState extends State<WistiaPlayer>
   }
 
   void _onWebViewCreated(WebViewController webViewController) {
-    webViewController.loadUrl(Uri.dataFromString(_buildWistiaHTML(controller!),
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-        .toString());
+    webViewController.loadUrl(
+      Uri.dataFromString(
+        _buildWistiaHTML(controller!),
+        mimeType: 'text/html',
+        encoding: Encoding.getByName('utf-8'),
+      ).toString(),
+    );
 
     controller!.updateValue(
       controller!.value.copyWith(webViewController: webViewController),
@@ -132,40 +140,44 @@ class _WistiaPlayerState extends State<WistiaPlayer>
                 height: 100%;
                 width: 100%;
             }
-            iframe {display: block; width: 100%; height: 100%; border: none;}
+            iframe, .player {display: block; width: 100%; height: 100%; border: none;}
             </style>
         <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
         </head>
         <body>
-          <iframe src="https://fast.wistia.net/embed/iframe/${controller.videoId}?autoPlay=true&fitStrategy=fill&videoFoam=true&endVideoBehavior=loop&fullscreenButton=true&fullscreenOnRotateToLandscape=true&resume=true" allowtransparency="true" frameborder="0" scrolling="no" class="wistia_embed" name="wistia_embed" allowfullscreen mozallowfullscreen webkitallowfullscreen oallowfullscreen msallowfullscreen></iframe>
-          <script src="//fast.wistia.net/assets/external/E-v1.js" async></script>
           <script>
           window._wq = window._wq || [];
-          _wq.push({ id: '${controller.videoId}',
-           onReady: function(video) {
-            console.log("I got a handle to the video!", video);
-            video.bind("play", function() {
-              return video.unbind
-            })
-            video.bind("end", function(t) {
-              sendMessageToDart('Ended', { 'endTime': t })
-            })
-          }})
+          var wistiaPlayerOptions = { autoPlay : true };
+          _wq.push({
+            id: ${controller.videoId},
+            onReady: function(video) {
+                video.bind("play", function() {
+                  return video.unbind
+                });
+                video.bind("end", function(t) {
+                  sendMessageToDart('Ended', { 'endTime': t });
+                });
+              },
+              options: wistiaPlayerOptions,
+          });
 
           function sendMessageToDart(methodName, argsObject = {}) {
             var message = {
               'method': methodName,
               'args': argsObject
-            }
-            WistiaWebView.postMessage(JSON.stringify(message))
+            };
+            WistiaWebView.postMessage(JSON.stringify(message));
           }
           </script>
+           <script src="https//fast.wistia.com/embed/medias/${controller.videoId}.jsonp" async></script>
+           <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
+           <div class="wistia_embed wistia_async_${controller.videoId} player">&nbsp;</div>
         </body>
       </html>
     ''';
   }
 
-  String? get userAgent => controller!.flags.forceHD
+  String? get userAgent => controller!.options.forceHD
       ? 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36'
       : null;
 }
