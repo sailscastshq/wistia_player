@@ -145,6 +145,9 @@ class _WistiaPlayerState extends State<WistiaPlayer>
         <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
         </head>
         <body>
+           <script src="https//fast.wistia.com/embed/medias/${controller.videoId}.jsonp" async></script>
+           <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
+           <div class="wistia_embed wistia_async_${controller.videoId} ${controller.value.toString()} player">&nbsp;</div>
           <script>
           window._wq = window._wq || [];
           var wistiaPlayerOptions = { autoPlay : true };
@@ -169,9 +172,6 @@ class _WistiaPlayerState extends State<WistiaPlayer>
             WistiaWebView.postMessage(JSON.stringify(message));
           }
           </script>
-           <script src="https//fast.wistia.com/embed/medias/${controller.videoId}.jsonp" async></script>
-           <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
-           <div class="wistia_embed wistia_async_${controller.videoId} player">&nbsp;</div>
         </body>
       </html>
     ''';

@@ -330,4 +330,10 @@ class WistiaPlayerValue {
     data['wmode'] = wmode;
     return data;
   }
+
+  @override
+  String toString() {
+    List<String> values = ['autoPlay=$autoPlay'];
+    return values.join(' ');
+  }
 }
