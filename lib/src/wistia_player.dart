@@ -17,6 +17,21 @@ class WistiaPlayer extends StatefulWidget {
   /// Creates a [WistiaPlayer] widget.
   WistiaPlayer({this.key, this.onEnded, required this.controller});
 
+  /// Converts fully qualified Wistia Url to video id.
+  ///
+  /// If videoId is passed as url then we will skip conversion.
+  static String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
+    bool isWistiaVideoId =
+        !url.contains(RegExp(r'https?:\/\/')) && url.length == 10;
+    if (isWistiaVideoId) return url;
+    if (trimWhitespaces) url = url.trim();
+    var wistiaShareLinkPattern =
+        RegExp(r"^https?:\/\/(?:www)?\w+\.wistia\.com\/medias\/(\w{10}).*$");
+    RegExpMatch? match = wistiaShareLinkPattern.firstMatch(url);
+
+    return match?.group(1);
+  }
+
   @override
   _WistiaPlayerState createState() => _WistiaPlayerState();
 }
