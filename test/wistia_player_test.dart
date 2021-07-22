@@ -5,6 +5,7 @@ import 'package:wistia_player/wistia_player.dart';
 void main() {
   test('Converts Wistia URL to videoId', () {
     expect(WistiaPlayer.convertUrlToId('e4a27b971d'), 'e4a27b971d');
+    expect(WistiaPlayer.convertUrlToId('4a27b971d'), null);
     expect(
         WistiaPlayer.convertUrlToId('http://home.wistia.com/medias/e4a27b971d'),
         'e4a27b971d');
