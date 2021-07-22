@@ -20,16 +20,26 @@ class WistiaPlayer extends StatefulWidget {
   /// Converts fully qualified Wistia Url to video id.
   ///
   /// If videoId is passed as url then we will skip conversion.
+  /// This will match:
+  /// http://home.wistia.com/medias/e4a27b971d
+  /// https://home.wistia.com/medias/e4a27b971d
+  /// http://home.wi.st/medias/e4a27b971d
+  /// http://home.wistia.com/embed/e4a27b971d
+  /// https://home.wistia.com/embed/e4a27b971d
+  /// https://home.wi.st/embed/e4a27b971d
   static String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
     bool isWistiaVideoId =
         !url.contains(RegExp(r'https?:\/\/')) && url.length == 10;
-    if (isWistiaVideoId) return url;
-    if (trimWhitespaces) url = url.trim();
-    var wistiaShareLinkPattern =
-        RegExp(r"^https?:\/\/(?:www)?\w+\.wistia\.com\/medias\/(\w{10}).*$");
-    RegExpMatch? match = wistiaShareLinkPattern.firstMatch(url);
 
-    return match?.group(1);
+    if (isWistiaVideoId) return url;
+
+    if (trimWhitespaces) url = url.trim();
+
+    var wistiaShareLinkPattern = RegExp(
+        r"https?:\/\/(?:www\.)?\w+\.(wistia\.com|wi\.st)\/(medias|embed)\/(\w{10}).*");
+
+    RegExpMatch? match = wistiaShareLinkPattern.firstMatch(url);
+    return match?.group(3);
   }
 
   @override
@@ -41,12 +51,15 @@ class _WistiaPlayerState extends State<WistiaPlayer>
   WistiaPlayerController? controller;
   WistiaPlayerState? _cachedPlayerState;
   bool _initialLoad = true;
+
   @override
   void initState() {
     WidgetsBinding.instance?.addObserver(this);
+
     if (!widget.controller.hasDisposed) {
       this.controller = widget.controller..addListener(listener);
     }
+
     super.initState();
   }
 
@@ -55,45 +68,43 @@ class _WistiaPlayerState extends State<WistiaPlayer>
     if (_initialLoad) {
       _initialLoad = false;
       controller?.updateValue(controller!.value.copyWith(
-          autoPlay: controller!.options.autoPlay,
-          controlsVisibleOnLoad: controller!.options.controlsVisibleOnLoad,
-          // copyLinkAndThumbnailEnabled:
-          //     copyLinkAndThumbnailEnabled ?? this.copyLinkAndThumbnailEnabled,
-          // doNotTrack: doNotTrack ?? this.doNotTrack,
-          // email: email ?? this.email,
-          endVideoBehavior: controller!.options.endVideoBehavior,
-          // fakeFullScreen: fakeFullScreen ?? this.fakeFullScreen,
-          // fitStrategy: fitStrategy ?? this.fitStrategy,
-          // fullscreenButton: fullscreenButton ?? this.fullscreenButton,
-          // fullscreenOnRotateToLandscape:
-          //     fullscreenOnRotateToLandscape ?? this.fullscreenOnRotateToLandscape,
-          // googleAnalytics: googleAnalytics ?? this.googleAnalytics,
-
-          // playbackRateControl: playbackRateControl ?? this.playbackRateControl,
-          playbar: controller!.options.playbar,
-          // playButton: playButton ?? this.playButton,
-          playerColor: controller!.options.playerColor,
-          // playlistLinks: playlistLinks ?? this.playlistLinks,
-          // playlistLoop: playlistLoop ?? this.playlistLoop,
-          // playsinline: playsinline ?? this.playsinline,
-          // playSuspendedOffScreen:
-          //     playSuspendedOffScreen ?? this.playSuspendedOffScreen,
-          // preload: preload ?? this.preload,
-          // qualityControl: qualityControl ?? this.qualityControl,
-          // qualityMax: qualityMax ?? this.qualityMax,
-          // qualityMin: qualityMin ?? this.qualityMin,
-          resumable: controller!.options.resumable,
-          // seo: seo ?? this.seo,
-          // settingsControl: settingsControl ?? this.settingsControl,
-          // silentAutoPlay: silentAutoPlay ?? this.silentAutoPlay,
-          // smallPlayButton: smallPlayButton ?? this.smallPlayButton,
-          // stillUrl: stillUrl ?? this.stillUrl,
-          // time: time ?? this.time,
-          // thumbnailAltText: thumbnailAltText ?? this.thumbnailAltText,
-          videoFoam: controller!.options.videoFoam,
-          volume: controller!.options.volume,
-          volumeControl: controller!.options.volumeControl,
-          wmode: controller!.options.wmode));
+          autoPlay: controller?.options.autoPlay,
+          controlsVisibleOnLoad: controller?.options.controlsVisibleOnLoad,
+          copyLinkAndThumbnailEnabled:
+              controller?.options.copyLinkAndThumbnailEnabled,
+          doNotTrack: controller?.options.doNotTrack,
+          email: controller?.options.email,
+          endVideoBehavior: controller?.options.endVideoBehavior,
+          fakeFullScreen: controller?.options.fakeFullScreen,
+          fitStrategy: controller?.options.fitStrategy,
+          fullscreenButton: controller?.options.fullscreenButton,
+          fullscreenOnRotateToLandscape:
+              controller?.options.fullscreenOnRotateToLandscape,
+          googleAnalytics: controller?.options.googleAnalytics,
+          playbackRateControl: controller?.options.playbackRateControl,
+          playbar: controller?.options.playbar,
+          playButton: controller?.options.playButton,
+          playerColor: controller?.options.playerColor,
+          playlistLinks: controller?.options.playlistLinks,
+          playlistLoop: controller?.options.playlistLoop,
+          playsinline: controller?.options.playsinline,
+          playSuspendedOffScreen: controller?.options.playSuspendedOffScreen,
+          preload: controller?.options.preload,
+          qualityControl: controller?.options.qualityControl,
+          qualityMax: controller?.options.qualityMax,
+          qualityMin: controller?.options.qualityMin,
+          resumable: controller?.options.resumable,
+          seo: controller?.options.seo,
+          settingsControl: controller?.options.settingsControl,
+          silentAutoPlay: controller?.options.silentAutoPlay,
+          smallPlayButton: controller?.options.smallPlayButton,
+          stillUrl: controller?.options.stillUrl,
+          time: controller?.options.time,
+          thumbnailAltText: controller?.options.thumbnailAltText,
+          videoFoam: controller?.options.videoFoam,
+          volume: controller?.options.volume,
+          volumeControl: controller?.options.volumeControl,
+          wmode: controller?.options.wmode));
     }
   }
 
@@ -140,7 +151,7 @@ class _WistiaPlayerState extends State<WistiaPlayer>
   }
 
   void _handleWebResourceError(WebResourceError error) {
-    controller!.updateValue(
+    controller?.updateValue(
       controller!.value.copyWith(
           errorCode: error.errorCode, errorMessage: error.description),
     );
@@ -155,8 +166,8 @@ class _WistiaPlayerState extends State<WistiaPlayer>
           switch (jsonMessage['method']) {
             case 'Ready':
               {
-                controller!
-                    .updateValue(controller!.value.copyWith(isReady: true));
+                controller
+                    ?.updateValue(controller!.value.copyWith(isReady: true));
                 break;
               }
             case 'Ended':
@@ -179,7 +190,7 @@ class _WistiaPlayerState extends State<WistiaPlayer>
       ).toString(),
     );
 
-    controller!.updateValue(
+    controller?.updateValue(
       controller!.value.copyWith(webViewController: webViewController),
     );
   }
@@ -201,9 +212,14 @@ class _WistiaPlayerState extends State<WistiaPlayer>
                 height: 100%;
                 width: 100%;
             }
-            iframe, .player {display: block; width: 100%; height: 100%; border: none;}
+            iframe, .player {
+              display: block;
+              width: 100%;
+              height: 100%;
+              border: none;
+              }
             </style>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+            <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
         </head>
         <body>
            <script src="https//fast.wistia.com/embed/medias/${controller.videoId}.jsonp" async></script>
@@ -249,12 +265,10 @@ class _WistiaPlayerState extends State<WistiaPlayer>
                 })
 
                 window.play = function play() {
-                  video.play();
-                  return ''
+                  return video.play();
                 }
                 window.pause = function pause() {
-                  video.pause();
-                  return ''
+                  return video.pause();
                 }
                 window.isMuted = function isMuted() {
                   return video.isMuted()
@@ -273,20 +287,16 @@ class _WistiaPlayerState extends State<WistiaPlayer>
                 }
 
                 window.mute = function mute() {
-                  video.mute()
-                  return ''
+                  return video.mute()
                 }
 
                 window.unmute = function unmute() {
-                  video.unmute()
-                  return ''
+                  return video.unmute()
                 }
 
                 window.duration = function duration() {
                   return video.duration()
                 }
-
-
               },
           });
 
