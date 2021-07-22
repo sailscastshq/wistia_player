@@ -1,12 +1,30 @@
-// import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
-// import 'package:wistia_player/wistia_player.dart';
+import 'package:wistia_player/wistia_player.dart';
 
 void main() {
-  // test('adds one to input values', () {
-  //   final calculator = Calculator();
-  //   expect(calculator.addOne(2), 3);
-  //   expect(calculator.addOne(-7), -6);
-  //   expect(calculator.addOne(0), 1);
-  // });
+  test('Converts Wistia URL to videoId', () {
+    expect(WistiaPlayer.convertUrlToId('e4a27b971d'), 'e4a27b971d');
+    expect(WistiaPlayer.convertUrlToId('4a27b971d'), null);
+    expect(
+        WistiaPlayer.convertUrlToId('http://home.wistia.com/medias/e4a27b971d'),
+        'e4a27b971d');
+    expect(
+        WistiaPlayer.convertUrlToId(
+            'http://www.home.wistia.com/medias/e4a27b971d'),
+        'e4a27b971d');
+    expect(
+        WistiaPlayer.convertUrlToId(
+            'https://home.wistia.com/medias/e4a27b971d'),
+        'e4a27b971d');
+    expect(WistiaPlayer.convertUrlToId('https://home.wi.st/medias/e4a27b971d'),
+        'e4a27b971d');
+    expect(
+        WistiaPlayer.convertUrlToId('http://home.wistia.com/embed/e4a27b971d'),
+        'e4a27b971d');
+    expect(WistiaPlayer.convertUrlToId('https://home.wi.st/embed/e4a27b971d'),
+        'e4a27b971d');
+    expect(WistiaPlayer.convertUrlToId('https://home.wi.st/medias/e4a27b971d'),
+        'e4a27b971d');
+  });
 }
