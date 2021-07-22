@@ -22,11 +22,7 @@ class WistiaPlayerController extends ValueNotifier<WistiaPlayerValue> {
   }
 
   _callMethod(String methodString) {
-    if (value.isReady) {
-      value.webViewController?.evaluateJavascript(methodString);
-    } else {
-      print('The controller is not ready for method calls.');
-    }
+    value.webViewController?.evaluateJavascript(methodString);
   }
 
   bool _isDisposed = false;

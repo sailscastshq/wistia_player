@@ -1,10 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:wistia_player/src/enums/end_video_behavior.dart';
 import 'package:wistia_player/src/enums/fit_strategy.dart';
 import 'package:wistia_player/src/enums/preload.dart';
 
 class WistiaPlayerOptions {
   final bool forceHD;
-  final bool isMuted;
 
   /// If set to true, the video will play as soon as it’s ready.
   final bool autoPlay;
@@ -22,7 +22,6 @@ class WistiaPlayerOptions {
   final bool fullscreenButton;
   final bool fullscreenOnRotateToLandscape;
   final bool googleAnalytics;
-  final bool muted;
   final playbackRateControl;
   final bool playbar;
   final bool playButton;
@@ -120,7 +119,6 @@ class WistiaPlayerOptions {
 
   const WistiaPlayerOptions({
     this.forceHD = false,
-    this.isMuted = false,
     this.autoPlay = true,
     this.controlsVisibleOnLoad = true,
     this.copyLinkAndThumbnailEnabled = false,
@@ -132,7 +130,6 @@ class WistiaPlayerOptions {
     this.fullscreenButton = true,
     this.fullscreenOnRotateToLandscape = true,
     this.googleAnalytics = false,
-    this.muted = false,
     this.playbackRateControl = true,
     this.playbar = true,
     this.playButton = false,
@@ -158,4 +155,24 @@ class WistiaPlayerOptions {
     this.volumeControl = true,
     this.wmode = 'transparent',
   });
+
+  get getEndVideoBehavior {
+    String behavior = describeEnum(this.endVideoBehavior);
+    if (behavior == 'wsDefault') {
+      return 'default';
+    }
+    return behavior;
+  }
+
+  @override
+  String toString() {
+    List<String> values = [
+      'autoPlay=$autoPlay',
+      'resumable=$resumable',
+      'playerColor=$playerColor',
+      'endVideoBehavior=$getEndVideoBehavior',
+      'playbar=$playbar'
+    ];
+    return values.join(' ');
+  }
 }

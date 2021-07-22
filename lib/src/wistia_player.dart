@@ -40,7 +40,7 @@ class _WistiaPlayerState extends State<WistiaPlayer>
     with WidgetsBindingObserver {
   WistiaPlayerController? controller;
   WistiaPlayerState? _cachedPlayerState;
-
+  bool _initialLoad = true;
   @override
   void initState() {
     WidgetsBinding.instance?.addObserver(this);
@@ -50,7 +50,52 @@ class _WistiaPlayerState extends State<WistiaPlayer>
     super.initState();
   }
 
-  void listener() async {}
+  void listener() async {
+    if (controller == null) return;
+    if (_initialLoad) {
+      _initialLoad = false;
+      controller?.updateValue(controller!.value.copyWith(
+          autoPlay: controller!.options.autoPlay,
+          controlsVisibleOnLoad: controller!.options.controlsVisibleOnLoad,
+          // copyLinkAndThumbnailEnabled:
+          //     copyLinkAndThumbnailEnabled ?? this.copyLinkAndThumbnailEnabled,
+          // doNotTrack: doNotTrack ?? this.doNotTrack,
+          // email: email ?? this.email,
+          endVideoBehavior: controller!.options.endVideoBehavior,
+          // fakeFullScreen: fakeFullScreen ?? this.fakeFullScreen,
+          // fitStrategy: fitStrategy ?? this.fitStrategy,
+          // fullscreenButton: fullscreenButton ?? this.fullscreenButton,
+          // fullscreenOnRotateToLandscape:
+          //     fullscreenOnRotateToLandscape ?? this.fullscreenOnRotateToLandscape,
+          // googleAnalytics: googleAnalytics ?? this.googleAnalytics,
+
+          // playbackRateControl: playbackRateControl ?? this.playbackRateControl,
+          playbar: controller!.options.playbar,
+          // playButton: playButton ?? this.playButton,
+          playerColor: controller!.options.playerColor,
+          // playlistLinks: playlistLinks ?? this.playlistLinks,
+          // playlistLoop: playlistLoop ?? this.playlistLoop,
+          // playsinline: playsinline ?? this.playsinline,
+          // playSuspendedOffScreen:
+          //     playSuspendedOffScreen ?? this.playSuspendedOffScreen,
+          // preload: preload ?? this.preload,
+          // qualityControl: qualityControl ?? this.qualityControl,
+          // qualityMax: qualityMax ?? this.qualityMax,
+          // qualityMin: qualityMin ?? this.qualityMin,
+          resumable: controller!.options.resumable,
+          // seo: seo ?? this.seo,
+          // settingsControl: settingsControl ?? this.settingsControl,
+          // silentAutoPlay: silentAutoPlay ?? this.silentAutoPlay,
+          // smallPlayButton: smallPlayButton ?? this.smallPlayButton,
+          // stillUrl: stillUrl ?? this.stillUrl,
+          // time: time ?? this.time,
+          // thumbnailAltText: thumbnailAltText ?? this.thumbnailAltText,
+          videoFoam: controller!.options.videoFoam,
+          volume: controller!.options.volume,
+          volumeControl: controller!.options.volumeControl,
+          wmode: controller!.options.wmode));
+    }
+  }
 
   @override
   void dispose() {
@@ -116,6 +161,7 @@ class _WistiaPlayerState extends State<WistiaPlayer>
               }
             case 'Ended':
               {
+                print('Video has ended');
                 if (widget.onEnded != null) {
                   widget.onEnded!(WistiaMetaData.fromJson(jsonMessage));
                 }
@@ -162,13 +208,15 @@ class _WistiaPlayerState extends State<WistiaPlayer>
         <body>
            <script src="https//fast.wistia.com/embed/medias/${controller.videoId}.jsonp" async></script>
            <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
-           <div class="wistia_embed wistia_async_${controller.videoId} ${controller.value.toString()} player">&nbsp;</div>
+           <div class="wistia_embed wistia_async_${controller.videoId} ${controller.options.toString()} player">&nbsp;</div>
           <script>
           window._wq = window._wq || [];
-          var wistiaPlayerOptions = { autoPlay : true };
           _wq.push({
             id: ${controller.videoId},
             onReady: function(video) {
+                if (video.hasData()) {
+                  sendMessageToDart('Ready');
+                }
                 video.bind("play", function() {
                   return video.unbind
                 });
