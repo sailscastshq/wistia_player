@@ -210,7 +210,7 @@ class _WistiaPlayerState extends State<WistiaPlayer>
            <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
            <div class="wistia_embed wistia_async_${controller.videoId} ${controller.options.toString()} player">&nbsp;</div>
           <script>
-          window._wq = window._wq || [];
+          window._wq = window._wq || []
           _wq.push({
             id: ${controller.videoId},
             onReady: function(video) {
@@ -218,13 +218,76 @@ class _WistiaPlayerState extends State<WistiaPlayer>
                   sendMessageToDart('Ready');
                 }
                 video.bind("play", function() {
+                  sendMessageToDart('Playing')
+                })
+
+                video.bind('pause', function() {
+                  sendMessageToDart('Paused')
+                })
+                video.bind("end", function(endTime) {
+                  sendMessageToDart('Ended', { endTime: endTime });
+                })
+
+                video.bind("percentwatchedchanged", function(percent, lastPercent) {
+                  sendMessageToDart('PercentChanged', { percent, percent, lastPercent: lastPercent })
+                })
+
+                video.bind("mutechange", function (isMuted)) {
+                  sendMessageToDart('MuteChange', { isMuted: isMuted })
+                }
+
+                video.bind("enterfullscreen", function() {
+                  sendMessageToDart('EnterFullscreen')
+                })
+
+                video.bind("cancelfullscreen", function() {
+                  sendMessageToDart('CancelFullscreen')
+                })
+
+                video.bind("beforeremove", function() {
                   return video.unbind
-                });
-                video.bind("end", function(t) {
-                  sendMessageToDart('Ended', { 'endTime': t });
-                });
+                })
+
+                window.play = function play() {
+                  video.play();
+                  return ''
+                }
+                window.pause = function pause() {
+                  video.pause();
+                  return ''
+                }
+                window.isMuted = function isMuted() {
+                  return video.isMuted()
+                }
+
+                window.inFullscreen = function inFullscreen() {
+                  return video.inFullscreen()
+                }
+
+                window.hasData = function hasData() {
+                  return video.hasData()
+                }
+
+                window.aspect = function aspect() {
+                  return video.aspect()
+                }
+
+                window.mute = function mute() {
+                  video.mute()
+                  return ''
+                }
+
+                window.unmute = function unmute() {
+                  video.unmute()
+                  return ''
+                }
+
+                window.duration = function duration() {
+                  return video.duration()
+                }
+
+
               },
-              options: wistiaPlayerOptions,
           });
 
           function sendMessageToDart(methodName, argsObject = {}) {

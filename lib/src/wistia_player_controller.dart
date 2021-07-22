@@ -59,7 +59,7 @@ class WistiaPlayerController extends ValueNotifier<WistiaPlayerValue> {
   /// }
   /// ```
   ///
-  num aspectRatio() => _callMethod('aspect()');
+  num aspect() => _callMethod('aspect()');
 
   /// If video is playing in fullscreen mode, calling this method will exit fullscreen.
   void cancelFullscreen() => _callMethod('cancelFullscreen()');
